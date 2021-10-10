@@ -2,23 +2,17 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "../routes";
 import { CHAT_ROUTE, LOGIN_ROUTE } from "../utils/constants";
+import { isLoggedIn } from "../utils/constants";
 
 const AppRouter = () => {
-  const user = false;
+  const routesArr = isLoggedIn ? privateRoutes : publicRoutes;
 
-  return user ? (
+  return (
     <Switch>
-      {privateRoutes.map(({ path, Component }) => (
-        <Route path={path} Component={Component} exact />
+      {routesArr.map(({ path, Component }) => (
+        <Route key={path} path={path} component={Component} exact />
       ))}
-      <Redirect to={CHAT_ROUTE} />
-    </Switch>
-  ) : (
-    <Switch>
-      {publicRoutes.map(({ path, Component }) => (
-        <Route path={path} Component={Component} exact />
-      ))}
-      <Redirect to={LOGIN_ROUTE} />
+      <Redirect to={isLoggedIn ? CHAT_ROUTE : LOGIN_ROUTE} />
     </Switch>
   );
 };
